@@ -1,0 +1,39 @@
+main>section {
+	display: none;
+}
+.active {
+	display: block;
+}
+* {
+	font-family: helvetica;
+	color: white;
+}
+body {
+	background-color: #282828;
+	width: 80%;
+	text-align: center;
+	margin: auto;
+}
+section {
+	background-color: black;
+	padding: 20pt;
+}
+header {
+	display: float;
+}
+ul {
+	list-style: none;
+	display: inline;
+}
+ul li {
+	padding: 20pt;
+	margin-bottom: 5pt;
+	background-color: white;
+}
+ul li a {
+	color: black;
+	font-size: 18pt;
+	padding: 20pt;
+	margin-bottom: 5pt;
+	background-color: white;
+}
