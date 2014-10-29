@@ -1,19 +1,25 @@
 <!doctype html>
-<!--
-Document by CMDA, FED2, Q3 2014
-Edited by Jurrien Meyrahn
--->
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name="description" content="Web App V1, basic JavaScript Skeleton">
+        <meta name="description" content="Web App final version">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>My Favorite Movies</title>
+        <title>movieshelf</title>
         <link rel="stylesheet" href="static/css/style.css">
-        <link rel="author" href="humans.txt">
+        <link rel="author" href="Jurrien Meyrahn (Maroon Paw 2014)">
         
     </head>
-    <body>	
+    <body>
+    	<header>
+    		<h1>movieshelf</h1>
+			<nav>
+				<ul>
+					<li><a href="#about">About</a></a></li>
+					<li><a href="#movies">Movies</a></li>
+					<li><a href="#details">Show Details</a></li>
+				</ul>
+			</nav>
+		</header>	
 		<main id="content">
 			<section id="about">
 				<section>
@@ -28,33 +34,29 @@ Edited by Jurrien Meyrahn
 			</section>
 
 			<section id="movies">
-				<h1>Favorite movies</h1>	
 				<article id="movieInstance">
 					<header>
-						<h1 class="movieTitle">Shawshank Redemption</h1>
-						<em class="movieReleaseDateLabel">Release date: <time class="movieReleaseDate">14 October 1994</time></em>
+						<h1 class="title">Shawshank Redemption</h1> <h2 id="reviews"><h2 id="score"></h2>
+						<em class="movieReleaseDateLabel">Release date: <time class="release_date">14 October 1994</time></em>
 					</header>
+					<div class ="info">
+						<figure id="imgFigure">
+							<img class="cover" src="" alt="">
+						</figure>
 
-					<figure id="imgFigure">
-						<img class="movieImage" src="images/shawshank-redemption.jpg" alt="">
-					</figure>
-
-					<p class="movieDescription">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+						<p class="plot">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+						<a href="" id="id"></a>
+					</div>
+					<ul class="actors nodetail"><li class="actor_name"></ul>
 				</article>
 			</section>
 		</main>
 		
-		<header>
-			<nav>
-				<ul>
-					<li><a href="#about">About</a></a></li>
-					<li><a href="#movies">Movies</a></li>
-				</ul>
-			</nav>
-		</header>
+		
 		<script src="static/js/vendor/routie.js"></script>
 		<script src="static/js/vendor/jquery-1.11.1.min.js"></script>
         <script src="static/js/vendor/transparency.min.js"></script>
+        <script src="static/js/vendor/underscore-min.js"></script>
         <script src="static/js/app.js"></script>
     </body>
 </html>

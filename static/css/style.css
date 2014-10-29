@@ -1,39 +1,96 @@
+* {
+	font-family: helvetica;
+	margin: 0pt;
+	padding: 0pt;
+}
 main>section {
 	display: none;
 }
 .active {
 	display: block;
 }
-* {
-	font-family: helvetica;
-	color: white;
+.nodetail {
+	display: none;
+}
+.detail {
+	display: block;
 }
 body {
-	background-color: #282828;
-	width: 80%;
-	text-align: center;
 	margin: auto;
+	background-color: #EA1F38;
 }
 section {
-	background-color: black;
-	padding: 20pt;
+	padding: 10pt;
+}
+#content {
+	background-color: white;
+	padding: 15pt;
+	margin: 10pt;
 }
 header {
 	display: float;
 }
-ul {
-	list-style: none;
-	display: inline;
+body > header > h1 {
+	color: white;
+	text-align: center;
+	margin-top: 10pt;
+	font-size: 36pt;
 }
-ul li {
-	padding: 20pt;
+nav > ul {
+	list-style: none;
+	display: inline-block;
+	margin: 10pt;
+}
+nav > ul li {
+	padding: 5pt;
 	margin-bottom: 5pt;
 	background-color: white;
+	display: inline-block;
+
 }
 ul li a {
 	color: black;
 	font-size: 18pt;
-	padding: 20pt;
+	padding: 5pt;
 	margin-bottom: 5pt;
 	background-color: white;
+	text-decoration: none;
+}
+#movieInstance {
+	background-color: white;
+	padding-top: 5pt;
+}
+#movieInstance h1 {
+	margin: 0.5em;
+	font-size: 24pt;
+}
+#movieInstance header {
+	margin: 5pt;
+}
+#movieInstance h2 {
+	float: right;
+	margin-top: -24pt;
+	margin-right: 24pt;
+}
+#movieInstance .info {
+	padding: 1em;
+}
+
+#movieInstance .movieReleaseDateLabel {
+	margin-left: 13pt;
+}
+
+#movieInstance .info p {
+	max-width: 50%;
+	margin-left: 120pt;
+}
+
+#movieInstance figure img {
+	float: left;
+	max-height: 200px;
+	display: inline-block;
+}
+#movieInstance .info {
+	margin-bottom: 5pt;
+	min-height: 220px;
 }
