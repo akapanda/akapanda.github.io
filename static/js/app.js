@@ -6,9 +6,8 @@ var movieshelf = movieshelf || {};
     movieshelf.controller = {
         init: function() {
             movieshelf.router.init();
-            movieshelf.data.load("http://dennistel.nl/movies");
+            movieshelf.data.loadData();
             movieshelf.dataManipulate.reduceReviews();
-            movieshelf.dataManipulate.filter();
             movieshelf.sections.init();
             
         },
@@ -26,11 +25,13 @@ var movieshelf = movieshelf || {};
                 'details': function() {
                     movieshelf.sections.toggle("details");
                 },
+                //zonder # en VAN 1 EEN VAR MAKEN
+                'movies/:id' : function (id) {
+                   movieshelf.sections.getDetail(id, movieshelf.content.movies);
+                },
                 '*' : function () {
                     movieshelf.sections.toggle("about");
                 },
-                '#movies/1' : function () {
-                }
             });
         }
     }
@@ -64,24 +65,35 @@ var movieshelf = movieshelf || {};
         movies: [],
     }
 
-    movieshelf.data = {
-        load: function(url) {
-            movieshelf.xhr.trigger("GET", url, this.localStore);
-            var parsedData = JSON.parse(localStorage.getItem("movieData"));
-            this.localPull(parsedData);
+     movieshelf.data = {
+        loadData: function() {
+            if (localStorage.getItem("movieData") === null) {
+                movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.localStore);
+                var parsedData = JSON.parse(localStorage.getItem("movieData"));
+                this.dataPlacer(parsedData);
+            } else {
+                var parsedData = JSON.parse(localStorage.getItem("movieData"));
+                this.dataPlacer(parsedData)
+            }
+            
         },
-        localStore : function(data) {
+        localStore: function(data) {
             localStorage.setItem("movieData", data);
         },
-        localPull: function(data) {
+        dataPlacer: function(data) {
             movieshelf.content.movies = data;
+        },
+        updateData: function() {
+            movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.localStore);
+            var parsedData = JSON.parse(localStorage.getItem("movieData"));
+            this.dataPlacer(parsedData);
         }
     }
 
     movieshelf.dataManipulate = {
         reduceReviews: function() {
             _.filter(
-                _.map(movieshelf.content.movies, function (movie, i){
+                _.map(movieshelf.content.movies, function (movie, i) {
                     movie.reviews = _.reduce(
                         movie.reviews, function(memo, review){   
                                 return memo + review.score; 
@@ -91,64 +103,77 @@ var movieshelf = movieshelf || {};
                     })
             );
         },
-        filter: function () {
-            _.filter(
-                _.map(movieshelf.content.movies, function (movie, i){
-                    return movie;
-                }), 
-                function (movie) { return _.contains(movie.genres, 'Crime');
-            })
+        filter: function(key, array) {
+            // filter door de meegegeven array en sla die op in filtered
+            var filtered = _.filter(array, function(array){ 
+                //return alle objecten die de key in array.genres hebben staan
+                return _.contains(array.genres, key);
+            });
+
+            movieshelf.sections.movies(filtered);
         },
     }
 
     movieshelf.sections = {
         init: function() {
-            this.about();
-            this.movies();
+            this.about(movieshelf.content.about);
+            this.movies(movieshelf.content.movies);
         },
-        about: function() {
-            Transparency.render(document.getElementById("content"), movieshelf.content.about);
+        about: function(data) {
+            Transparency.render(document.getElementById("content"), data);
         },
         directives: {
                     cover: {
-                        src: function(params){
+                        src: function(params) {
                             return this.cover
                         }
                     },
-                    id: {
-                        href: function(params){
+                    detailLink: {
+                        href: function(params) {
                             return "#movies/" + this.id
                         }
                     }
             },
-        movies: function (){
-            Transparency.render(document.getElementById("movieInstance"), movieshelf.content.movies, this.directives);
+        movies: function (data) {
+            Transparency.render(document.getElementById("movieInstance"), data, this.directives);
+        },
+        getDetail: function (key, array) {
+            //filter door de array heen en return alleen het object waar het id gelijk staat aan de mee gegeven key
+            var detailObj = _.filter(array, function (movie) {
+                return movie.id == key;
+            });
+            // zet de templater aan het werk en stuur alleen het object vanuit de array mee
+            this.renderDetail(detailObj[0]);
+        },
+        renderDetail: function (data) {
+            Transparency.render(document.getElementById("movieDetail"), data, this.directives);
+        },
+        deactivateAll: function () {
+            document.querySelector("#about").classList.remove("active");
+            document.querySelector("#movies").classList.remove("active");
         },
         toggle: function(section) {
             if (section == "movies") {
+                this.deactivateAll();
                 document.querySelector("#movies").classList.add("active");
-                document.querySelector("#about").classList.remove("active");
             }
             else if (section == "about") {
+                this.deactivateAll();
                 document.querySelector("#about").classList.add("active");
-                document.querySelector("#movies").classList.remove("active");
             }
-            else if (section == "details") {
-                var list = document.querySelectorAll(".actors");
-
-                for(var i = 0; i < list.length; ++i) {
-                    // print the tag name of the node (DIV, SPAN, etc.)
-                    var curr_node = list[i];
-                    console.log(curr_node.tagName);
-
-                    // show all the attributes of the node (id, class, etc.)
-                    for(var j = 0; j < curr_node.attributes.length; ++j) {
-                        var curr_attr = curr_node.attributes[j];
-                        curr_node.classList.remove("nodetail")
-                    }
-                }
+        }
+    },
+    movieshelf.genreFilter = {
+        OnChange: function (dropdown) {
+        var value = dropdown.options[dropdown.selectedIndex].value;
+        if (value == "ShowAll") {
+            movieshelf.sections.movies(movieshelf.content.movies);
+            }
+            else {
+                movieshelf.dataManipulate.filter(value, movieshelf.content.movies);
             };
-        },
+            return true;
+        }
     }
 
     movieshelf.controller.init();
