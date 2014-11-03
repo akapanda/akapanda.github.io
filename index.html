@@ -10,64 +10,76 @@
         
     </head>
     <body>
-    	<header>
-    		<h1>movieshelf</h1>
-			<nav>
-				<ul>
-					<li><a href="#about">About</a></a></li>
-					<li><a href="#movies">Movies</a></li>
-					<li onclick="movieshelf.data.updateData()">Update Data</li>
-					<li><select onchange="movieshelf.genreFilter.OnChange(this);">
-						<option value="ShowAll">Show All</option>
-						<option value="Horror">Horror</option>
-						<option value="Crime">Crime</option>
-						<option value="Drama">Drama</option>
-						<option value="Thriller">Thriller</option>
-						<option value="Action">Action</option>
-						<option value="Adventure">Adventure</option>
-					</select></li>
-				</ul>
-			</nav>
-		</header>	
-		<main id="content">
-			<section id="about">
-				<section>
-					<header>
-						<h1 id="header"></h1>
-						<p id="section1"></p>
-						<p id="section2"></p>
-						<p id="section3"></p>
-						<p id="section4"></p>
-					</header>
+    		<section id="loadscreen">
+    			<img id="loadingBar" src="images/loadRotate.png">
+    		</section>
+    		<section id="movieDetail" class="movieDetailOff">
+    			<h1 class="title"></h1>
+    			<h3>Directed by <em id="directors"><em id="name"></em></em></h3>
+    			<h2 id="score"></h2>
+    			<p>Release date: <em id="release_date"></em></p>
+    			<img src="" id="cover">
+    			<h3>Plot</h3>
+    			<p id="plot"></p>
+    			<h3>Starring</h3>
+    			<ul id="actors">
+    				<li><em id="actor_name"></em> as <em id="character"></em></li>
+    			</ul>
+    		</section>
+    		<div id="wrapper" class="invisibleWrapper">
+	    		<h1>movieshelf</h1>
+				<nav>
+					<ul id="mainNavigationList">
+						<li><a href="#about">About</a></a></li>
+						<li><a href="#movies">Movies</a></li>
+						<li onclick="movieshelf.data.updateData()" id="updateButton">Update Data</li>
+						<li><select onchange="movieshelf.genreFilter.OnChange(this);">
+							<option value="ShowAll">Show All</option>
+							<option value="Horror">Horror</option>
+							<option value="Crime">Crime</option>
+							<option value="Drama">Drama</option>
+							<option value="Thriller">Thriller</option>
+							<option value="Action">Action</option>
+							<option value="Adventure">Adventure</option>
+						</select></li>
+					</ul>
+				</nav>
+			<main id="content">
+				<section id="about">
+					<section>
+						<header>
+							<p id="section1"></p>
+							<p id="section2"></p>
+							<p id="section3"></p>
+							<p id="section4"></p>
+						</header>
+					</section>
 				</section>
-			</section>
 
-			<section id="movies">
-				<article id="movieDetail">
-					<h1 class="title"></h1>
-				</article>
-				<article id="movieInstance">
-					<a href="" id="detailLink">
-					<header>
-						<h1 class="title">Shawshank Redemption</h1> <h2 id="reviews"><h2 id="score"></h2>
-						<em class="movieReleaseDateLabel">Release date: <time class="release_date">14 October 1994</time></em>
-					</header>
-					<div class ="info">
-						<figure id="imgFigure">
-							<img class="cover" src="" alt="">
-						</figure>
+				<section id="movies">
+					<article id="movieInstance">
+						<a href="" id="detailLink">
+						<header>
+							<h1 class="title">Shawshank Redemption</h1> <h2 id="reviews"><h2 id="score"></h2>
+							<em class="movieReleaseDateLabel">Release date: <time class="release_date">14 October 1994</time></em>
+						</header>
+						<div class ="info">
+							<figure id="imgFigure">
+								<img class="cover" src="" alt="">
+							</figure>
 
-						<p class="plot">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
-						
-					</div>
-					<ul class="actors nodetail"><li class="actor_name"></ul>
-					</a>
-				</article>
-			</section>
-		</main>
+							<p class="plot">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+							
+						</div>
+						</a>
+					</article>
+				</section>
+			</main>
+		</div>
 		
 		
 		<script src="static/js/vendor/routie.js"></script>
+		<script src="static/js/vendor/hammer.min.js"></script>
 		<script src="static/js/vendor/jquery-1.11.1.min.js"></script>
         <script src="static/js/vendor/transparency.min.js"></script>
         <script src="static/js/vendor/underscore-min.js"></script>

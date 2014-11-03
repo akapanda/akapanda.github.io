@@ -4,32 +4,34 @@ var movieshelf = movieshelf || {};
 (function(){
 
     movieshelf.controller = {
+        //Start de applicatie door de startpunten van alle elementen op de juiste volgorde in te laden.
         init: function() {
             movieshelf.router.init();
-            movieshelf.data.loadData();
-            movieshelf.dataManipulate.reduceReviews();
+            Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.defaultText);
+            movieshelf.data.loadData(); 
             movieshelf.sections.init();
-            
-        },
+        }
     }
 
+    //Rouet die via routie werkt
     movieshelf.router = {
         init: function(){
             routie({
-                'about': function() {
+                "about": function() {
                     movieshelf.sections.toggle("about");
                 },
-                'movies': function() {
+                "movies": function() {
                     movieshelf.sections.toggle("movies");
                 },
-                'details': function() {
+                "details": function() {
                     movieshelf.sections.toggle("details");
                 },
-                //zonder # en VAN 1 EEN VAR MAKEN
-                'movies/:id' : function (id) {
+                //Detailpagina router
+                "movies/:id" : function (id) {
                    movieshelf.sections.getDetail(id, movieshelf.content.movies);
+                   movieshelf.sections.openDetail();
                 },
-                '*' : function () {
+                "*" : function () {
                     movieshelf.sections.toggle("about");
                 },
             });
@@ -54,43 +56,83 @@ var movieshelf = movieshelf || {};
         }
     }
 
+    //Content die ingeladen wordt door transparency
     movieshelf.content = {
+        //Content op about pagina
         about: {
-            header: "About this app",
             section1: "Cities fall but they are rebuilt. heroes die but they are remembered. the man likes to play chess; let's get him some rocks. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. bruce... i'm god. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. rehabilitated? well, now let me see. you know, i don't have any idea what that means. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. rehabilitated? well, now let me see. you know, i don't have any idea what that means. cities fall but they are rebuilt. heroes die but they are remembered. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all.", 
             section2: "I did the same thing to gandhi, he didn't eat for three weeks. bruce... i'm god. cities fall but they are rebuilt. heroes die but they are remembered. i once heard a wise man say there are no perfect men. only perfect intentions. cities fall but they are rebuilt. heroes die but they are remembered. boxing is about respect. getting it for yourself, and taking it away from the other guy. well, what is it today? more spelunking? let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. bruce... i'm god. well, what is it today? more spelunking? it only took me six days. same time it took the lord to make the world. i did the same thing to gandhi, he didn't eat for three weeks.", 
             section3: "Let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. boxing is about respect. getting it for yourself, and taking it away from the other guy. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. you measure yourself by the people who measure themselves by you. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. you measure yourself by the people who measure themselves by you. you measure yourself by the people who measure themselves by you. that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy.",  
             section4: "That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world."
         },
+        //Alle filmdata
         movies: [],
+        //Text voor de update data-knop
+        UpdateDataText: {
+            defaultText: {
+                updateButton: "Update Data"
+            },
+            updating: {
+                updateButton: "Updating..."
+            },
+            done: {
+                updateButton: "Done!"
+            }
+        }
     }
 
-     movieshelf.data = {
+    //Regelt alle verplaatsing van data
+    movieshelf.data = {
+        //Kijkt of de al in local storage staat. Zo niet, dan haalt hij het op van het web.
         loadData: function() {
             if (localStorage.getItem("movieData") === null) {
-                movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.localStore);
-                var parsedData = JSON.parse(localStorage.getItem("movieData"));
-                this.dataPlacer(parsedData);
-            } else {
+                movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.callback);
+            } 
+            else {
                 var parsedData = JSON.parse(localStorage.getItem("movieData"));
                 this.dataPlacer(parsedData)
+                movieshelf.dataManipulate.reduceReviews();
+                movieshelf.sections.loading.instantLoading();
             }
-            
         },
-        localStore: function(data) {
+        //Deze functie regelt alles dat pas in de callback uitgevoerd moet worden.
+        callback: function(data) {
             localStorage.setItem("movieData", data);
+            var parsedData = JSON.parse(localStorage.getItem("movieData"));
+            movieshelf.data.dataPlacer(parsedData);
+            movieshelf.dataManipulate.reduceReviews();
+            movieshelf.sections.loading.done();
+            movieshelf.sections.init();
+            Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.done);
+            var resetLoadingText = function() { Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.defaultText); };
+            setTimeout(resetLoadingText, 1000);
         },
+        //Zet de data in de browser.
         dataPlacer: function(data) {
             movieshelf.content.movies = data;
         },
+        //Updatetet de data handmatig
         updateData: function() {
-            movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.localStore);
+            Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.updating);
+            movieshelf.xhr.trigger("GET", "http://dennistel.nl/movies", this.updateDataCallback);
             var parsedData = JSON.parse(localStorage.getItem("movieData"));
             this.dataPlacer(parsedData);
+            movieshelf.dataManipulate.reduceReviews();
+        },
+        updateDataCallback: function (data) {
+            localStorage.setItem("movieData", data);
+            var parsedData = JSON.parse(localStorage.getItem("movieData"));
+            movieshelf.data.dataPlacer(parsedData);
+            movieshelf.dataManipulate.reduceReviews();
+            movieshelf.sections.init();
+            Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.done);
+            var resetLoadingText = function() { Transparency.render(document.getElementById("mainNavigationList"), movieshelf.content.UpdateDataText.defaultText); };
+            setTimeout(resetLoadingText, 1000);
         }
     }
 
     movieshelf.dataManipulate = {
+        //Hier gaat de data in, en er komt dezelfde data uit maar dan met reviews die gemiddel berekend zijn.
         reduceReviews: function() {
             _.filter(
                 _.map(movieshelf.content.movies, function (movie, i) {
@@ -103,17 +145,17 @@ var movieshelf = movieshelf || {};
                     })
             );
         },
-        filter: function(key, array) {
-            // filter door de meegegeven array en sla die op in filtered
-            var filtered = _.filter(array, function(array){ 
-                //return alle objecten die de key in array.genres hebben staan
-                return _.contains(array.genres, key);
+        //Filter functie om de films te filteren op genre
+        filter: function(genre, data) {
+            var filtered = _.filter(data, function(data){ 
+                return _.contains(data.genres, genre);
             });
 
             movieshelf.sections.movies(filtered);
-        },
+        }
     }
 
+    //Alle regeling van rendering en animaties.
     movieshelf.sections = {
         init: function() {
             this.about(movieshelf.content.about);
@@ -137,12 +179,11 @@ var movieshelf = movieshelf || {};
         movies: function (data) {
             Transparency.render(document.getElementById("movieInstance"), data, this.directives);
         },
-        getDetail: function (key, array) {
-            //filter door de array heen en return alleen het object waar het id gelijk staat aan de mee gegeven key
-            var detailObj = _.filter(array, function (movie) {
-                return movie.id == key;
+        //Returnet alleen de movie die gelijk staat aan de aangegeven movieId
+        getDetail: function (movieId, data) {
+            var detailObj = _.filter(data, function (movie) {
+                return movie.id == movieId;
             });
-            // zet de templater aan het werk en stuur alleen het object vanuit de array mee
             this.renderDetail(detailObj[0]);
         },
         renderDetail: function (data) {
@@ -161,8 +202,34 @@ var movieshelf = movieshelf || {};
                 this.deactivateAll();
                 document.querySelector("#about").classList.add("active");
             }
+        },
+        //Alle loading animaties worden hier geregeld.
+        loading: {
+            done: function() {
+                document.querySelector("#wrapper").classList.remove("invisibleWrapper");
+                document.querySelector("#wrapper").classList.add("animateWrapper");
+            },
+            instantLoading: function () {
+                document.querySelector("#wrapper").classList.remove("invisibleWrapper");
+                document.querySelector("#wrapper").classList.add("instantLoading");
+            },
+        },
+        openDetail: function() {
+            document.querySelector("#movieDetail").classList.remove("movieDetailOff");
+            document.querySelector("#movieDetail").classList.remove("closeMovieDetail");
+            document.querySelector("#movieDetail").classList.add("openMovieDetail");
+            scrollTo(0,0);
+        },
+        closeDetail: function() {
+            document.querySelector("#movieDetail").classList.add("closeMovieDetail");
+            setTimeout(this.movieDetailOff, 1000);
+        },
+        movieDetailOff: function() {
+            document.querySelector("#movieDetail").classList.add("movieDetailOff")
         }
-    },
+    }
+
+    //Reageert op dropdown: onChange-event
     movieshelf.genreFilter = {
         OnChange: function (dropdown) {
         var value = dropdown.options[dropdown.selectedIndex].value;
@@ -176,6 +243,19 @@ var movieshelf = movieshelf || {};
         }
     }
 
+    //Deze functie maakt de Local Storage key "movieData" leeg zodat de pagina altijd de data laadt.
+    movieshelf.loadSimulator = function() {
+        localStorage.removeItem("movieData");
+    }
+    
+    //Comment de loadSimulator uit om het laden van de data te testen.
+    //movieshelf.loadSimulator();
     movieshelf.controller.init();
+    
+    //Hammer.js regeling van de swipe
+    var hammertime = new Hammer(document.getElementById("movieDetail"));
+        hammertime.on('swiperight', function() {
+            movieshelf.sections.closeDetail();
+        });
     
 })();

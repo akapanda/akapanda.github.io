@@ -1,8 +1,10 @@
+/* Reset everything */
 * {
 	font-family: helvetica;
 	margin: 0pt;
 	padding: 0pt;
 }
+/* Base app styling */
 main>section {
 	display: none;
 }
@@ -21,10 +23,6 @@ main>section {
 }
 body {
 	margin: auto;
-	background-color: #EA1F38;
-}
-section {
-	padding: 10pt;
 }
 #content {
 	background-color: white;
@@ -34,7 +32,7 @@ section {
 header {
 	display: float;
 }
-body > header > h1 {
+#wrapper > h1 {
 	color: white;
 	text-align: center;
 	margin-top: 10pt;
@@ -60,6 +58,8 @@ ul li a {
 	background-color: white;
 	text-decoration: none;
 }
+
+/* movieInstance styling */
 #movieInstance {
 	background-color: white;
 	padding-top: 5pt;
@@ -73,11 +73,10 @@ ul li a {
 }
 #movieInstance h2 {
 	float: right;
-	margin-top: -24pt;
-	margin-right: 24pt;
+	margin-top: -5pt;
 }
 #movieInstance .info {
-	padding: 1em;
+	padding: 0.2em;
 }
 
 #movieInstance .movieReleaseDateLabel {
@@ -85,16 +84,125 @@ ul li a {
 }
 
 #movieInstance .info p {
-	max-width: 50%;
-	margin-left: 120pt;
+	max-width: 100%;
+	margin-left: 60pt;
 }
 
 #movieInstance figure img {
 	float: left;
-	max-height: 200px;
+	max-height: 100px;
 	display: inline-block;
 }
 #movieInstance .info {
 	margin-bottom: 5pt;
 	min-height: 220px;
 }
+
+/* Detail */
+#movieDetail {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow-y: scroll;
+	background-color: white;
+	padding: 1em;
+	padding-bottom: 10em;
+	text-align: center;
+}
+#movieDetail * {
+	text-align: center;
+	margin: 0.2em;
+}
+#movieDetail ul {
+	font-size: 8pt;
+}
+#movieDetail em {
+	font-variant: normal;
+	font-weight: bold;
+	font-style: normal;
+}
+.movieDetailOff {
+	display: none;
+}
+.openMovieDetail {
+	-webkit-animation-duration: 1s; 
+    animation-duration: 1s; 
+    -webkit-animation-name: slideLeft; 
+    animation-name: slideLeft;  
+}
+@-webkit-keyframes slideLeft { 
+	0% {
+    	-webkit-transform: translateX(100%); 
+	}
+}
+.closeMovieDetail {
+	-webkit-animation-duration: 1s; 
+    animation-duration: 1s; 
+    -webkit-animation-name: slideRight; 
+    animation-name: slideRight; 
+}
+@-webkit-keyframes slideRight { 
+	100% {
+	   	-webkit-transform: translateX(100%); 
+	}
+}
+
+/* Wrapper */
+#wrapper {
+	background-color: #EA1F38;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin-top: 0%;
+	padding-bottom: 10em;
+}
+.invisibleWrapper {
+	display: none;
+}
+.instantWrapper {
+	margin-top: 100%;
+}
+.animateWrapper {
+	-webkit-animation-duration: 1s; 
+    animation-duration: 1s; 
+    -webkit-animation-name: slideUp; 
+    animation-name: slideUp;  
+}
+@-webkit-keyframes slideUp { 
+	0% {
+    	-webkit-transform: translateY(100%); 
+	}
+}
+
+/* Loading screen */
+#loadscreen {
+	z-index: -100;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+}
+#loadscreen p {
+	position: relative;
+	margin-top: 25%;
+	margin-left: 50%;
+}
+#loadingBar {
+	position: absolute;
+	margin-top: 50%;
+	margin-left: 30%;
+    -webkit-animation:spin 1s linear infinite;
+    -moz-animation:spin 1s linear infinite;
+    animation:spin 1s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
+
+
+
